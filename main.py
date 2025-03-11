@@ -1,5 +1,7 @@
 import customtkinter as ctk
 import requests
+from PIL import Image
+from io import BytesIO
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 
@@ -11,7 +13,7 @@ class App(ctk.CTk):
     def __init__(self):
         super().__init__()
         self.title("NextGen Play")
-        self.geometry("600x400")
+        self.geometry("1000x700")
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("blue")
         
@@ -22,7 +24,7 @@ class App(ctk.CTk):
         self.login_frame = ctk.CTkFrame(self)
         self.login_frame.pack(pady=60, padx=20, fill="both", expand=True)
 
-        self.username_label = ctk.CTkLabel(self.login_frame, text="Nombre de Usuario:")
+        self.username_label = ctk.CTkLabel(self.login_frame, text="Nombre de usuario:")
         self.username_label.pack(pady=12, padx=10)
 
         self.username_entry = ctk.CTkEntry(self.login_frame, placeholder_text="Usuario")
@@ -36,10 +38,10 @@ class App(ctk.CTk):
     def create_main_frame(self):
         self.login_frame.destroy()
         
-        self.main_frame = ctk.CTkFrame(self)
+        self.main_frame = ctk.CTkScrollableFrame(self)
         self.main_frame.pack(pady=20, padx=20, fill="both", expand=True)
 
-        self.game_label = ctk.CTkLabel(self.main_frame, text="Nombre del Juego:")
+        self.game_label = ctk.CTkLabel(self.main_frame, text="Nombre del juego:")
         self.game_label.pack(pady=5)
 
         self.game_entry = ctk.CTkEntry(self.main_frame, width=300)
@@ -50,8 +52,8 @@ class App(ctk.CTk):
         )
         self.search_button.pack(pady=10)
 
-        self.results_text = ctk.CTkTextbox(self.main_frame, width=500, height=200)
-        self.results_text.pack(pady=10)
+        self.results_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
+        self.results_frame.pack(pady=10, fill="both", expand=True)
 
     def handle_login(self):
         username = self.username_entry.get()
@@ -66,12 +68,18 @@ class App(ctk.CTk):
         if not game_name or not self.current_user:
             return
         
-        self.results_text.delete("1.0", "end")
+        for widget in self.results_frame.winfo_children():
+            widget.destroy()
+        
         juegos = self.buscar_juegos(game_name)
         
         if juegos:
             juego = juegos[0]
-            self.results_text.insert("end", f"Juegos a similares a {juego['name']}\n\n")
+            title_label = ctk.CTkLabel(self.results_frame, 
+                                     text=f"Juegos similares a {juego['name']}",
+                                     font=("Arial", 14, "bold"))
+            title_label.grid(row=0, column=0, columnspan=3, pady=10)
+
             datos_usuarios[self.current_user].append({
                 'usuario': self.current_user,
                 'juego': juego['name'],
@@ -79,12 +87,43 @@ class App(ctk.CTk):
             })
 
             if 'similar_games' in juego:
-                self.results_text.insert("end", "Juegos encontrados:\n")
-                for similar_id in juego['similar_games']:
+                row = 2
+                col = 0
+                for i, similar_id in enumerate(juego['similar_games']):
                     similar = self.obtener_juegos_similares(similar_id)
-                    if similar:
-                        self.results_text.insert("end", f"- {similar[0]['name']}\n")
+                    if similar and 'cover' in similar[0]:
+                        col = i % 5
+                        self.mostrar_imagen(similar[0]['cover'], similar[0]['name'], row=row, col=col)
+                        if col == 4:
+                            row += 1
 
+    def mostrar_imagen(self, cover_data, nombre_juego, row, col):
+        image_id = cover_data['image_id']
+        url = f"https://images.igdb.com/igdb/image/upload/t_cover_big/{image_id}.jpg"
+        
+        response = requests.get(url)
+        img_data = Image.open(BytesIO(response.content))
+        
+        ct_image = ctk.CTkImage(light_image=img_data,
+                              dark_image=img_data,
+                              size=(150, 200))
+        
+        card_frame = ctk.CTkFrame(self.results_frame, 
+                                fg_color="transparent", 
+                                corner_radius=10,
+                                width=200,
+                                height=250)
+        card_frame.grid(row=row, column=col, padx=10, pady=10)
+
+        label_image = ctk.CTkLabel(card_frame, image=ct_image, text="")
+        label_image.pack(pady=5)
+
+        label_text = ctk.CTkLabel(card_frame, 
+                                text=nombre_juego, 
+                                wraplength=180,
+                                justify="center")
+        label_text.pack(pady=5)
+    
     def buscar_juegos(self, nombre_juego):
         url = "https://api.igdb.com/v4/games"
         headers = {
@@ -92,7 +131,7 @@ class App(ctk.CTk):
             "Authorization": f"Bearer {ACCESS_TOKEN}",
             "Accept": "application/json",
         }
-        data = f'search "{nombre_juego}"; fields name, id, similar_games;'
+        data = f'search "{nombre_juego}"; fields name, id, similar_games, cover.image_id;;'
         response = requests.post(url, headers=headers, data=data)
         return response.json() if response.status_code == 200 else None
 
@@ -102,7 +141,7 @@ class App(ctk.CTk):
             "Client-ID": CLIENT_ID,
             "Authorization": f"Bearer {ACCESS_TOKEN}",
         }
-        data = f'fields name; where id = {juego_id};'
+        data = f'fields name, cover.image_id; where id = {juego_id};'
         response = requests.post(url, headers=headers, data=data)
         return response.json() if response.status_code == 200 else None
 
