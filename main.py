@@ -54,6 +54,8 @@ class App(ctk.CTk):
 
         self.results_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
         self.results_frame.pack(pady=10, fill="both", expand=True)
+        for i in range(5):
+         self.results_frame.grid_columnconfigure(i, weight=1)
 
     def handle_login(self):
         username = self.username_entry.get()
@@ -78,7 +80,7 @@ class App(ctk.CTk):
             title_label = ctk.CTkLabel(self.results_frame, 
                                      text=f"Juegos similares a {juego['name']}",
                                      font=("Arial", 14, "bold"))
-            title_label.grid(row=0, column=0, columnspan=3, pady=10)
+            title_label.grid(row=0, column=0, columnspan=5, pady=10)
 
             datos_usuarios[self.current_user].append({
                 'usuario': self.current_user,
