@@ -27,10 +27,10 @@ class App(ctk.CTk):
         self.username_label = ctk.CTkLabel(self.login_frame, text="Nombre de usuario:",font=("false",20))
         self.username_label.pack(pady=12, padx=10)
 
-        self.username_entry = ctk.CTkEntry(self.login_frame, placeholder_text="Usuario",font=("Arial Rounded MT", 14))
+        self.username_entry = ctk.CTkEntry(self.login_frame, placeholder_text="Usuario",font=("Arial Rounded MT", 14),width=200)
         self.username_entry.pack(pady=12, padx=10)
         
-        self.password_entry = ctk.CTkEntry(self.login_frame, placeholder_text="Contraseña",font=("Arial Rounded MT", 14),show="*")
+        self.password_entry = ctk.CTkEntry(self.login_frame, placeholder_text="Contraseña",font=("Arial Rounded MT", 14),show="*",width=200)
         self.password_entry.pack(pady=12, padx=10)        
         
         self.submit_button = ctk.CTkButton(
