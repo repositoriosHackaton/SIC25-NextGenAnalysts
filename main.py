@@ -47,7 +47,7 @@ class App(ctk.CTk):
         self.main_frame = ctk.CTkScrollableFrame(self,fg_color="transparent")
         self.main_frame.pack(pady=20, padx=20, fill="both", expand=True)
 
-        self.game_label = ctk.CTkLabel(self.main_frame, text="Nombre del juego:",font=("false",20))
+        self.game_label = ctk.CTkLabel(self.main_frame, text="Introduce el nombre de un juego y descubre otros similares.",font=("false",20))
         self.game_label.pack(pady=5)
 
         self.game_entry = ctk.CTkEntry(self.main_frame, width=300,font=("Arial Rounded MT", 14))
@@ -83,7 +83,7 @@ class App(ctk.CTk):
         if juegos:
             juego = juegos[0]
             title_label = ctk.CTkLabel(self.results_frame, 
-                                     text=f"Juegos similares a {juego['name']}",
+                                     text=f"Estos son algunos títulos similares a {juego['name']} que podrían gustarte.",
                                      font=("false", 16))
             title_label.grid(row=0, column=0, columnspan=5, pady=10)
 
