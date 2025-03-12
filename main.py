@@ -16,16 +16,19 @@ class App(ctk.CTk):
         self.geometry("1000x700")
         ctk.set_appearance_mode("dark")
         ctk.set_default_color_theme("blue")
+        self.configure(fg_color="#1a1a1a")
         
         self.current_user = None
         self.create_login_frame()
 
     def create_login_frame(self):
-        self.login_frame = ctk.CTkFrame(self)
+        self.login_frame = ctk.CTkFrame(self,fg_color="transparent")
         self.login_frame.pack(pady=60, padx=20, fill="both", expand=True)
 
-        self.username_label = ctk.CTkLabel(self.login_frame, text="Nombre de usuario:",font=("false",20))
+        self.username_label = ctk.CTkLabel(self.login_frame, text="¡Bienvenido a NextGen Play!",font=("false",20))
         self.username_label.pack(pady=12, padx=10)
+        self.sub_label = ctk.CTkLabel(self.login_frame, text="¡Prepárate para descubrir tus próximos títulos favoritos!",font=("false",14))
+        self.sub_label.pack(pady=12, padx=10)
 
         self.username_entry = ctk.CTkEntry(self.login_frame, placeholder_text="Usuario",font=("Arial Rounded MT", 14),width=200)
         self.username_entry.pack(pady=12, padx=10)
@@ -41,7 +44,7 @@ class App(ctk.CTk):
     def create_main_frame(self):
         self.login_frame.destroy()
         
-        self.main_frame = ctk.CTkScrollableFrame(self)
+        self.main_frame = ctk.CTkScrollableFrame(self,fg="transparent")
         self.main_frame.pack(pady=20, padx=20, fill="both", expand=True)
 
         self.game_label = ctk.CTkLabel(self.main_frame, text="Nombre del juego:",font=("false",20))
