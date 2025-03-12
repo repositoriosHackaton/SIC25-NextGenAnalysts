@@ -24,14 +24,18 @@ class App(ctk.CTk):
         self.login_frame = ctk.CTkFrame(self)
         self.login_frame.pack(pady=60, padx=20, fill="both", expand=True)
 
-        self.username_label = ctk.CTkLabel(self.login_frame, text="Nombre de usuario:")
+        self.username_label = ctk.CTkLabel(self.login_frame, text="Nombre de usuario:",font=("false",20))
         self.username_label.pack(pady=12, padx=10)
 
-        self.username_entry = ctk.CTkEntry(self.login_frame, placeholder_text="Usuario")
+        self.username_entry = ctk.CTkEntry(self.login_frame, placeholder_text="Usuario",font=("Arial Rounded MT", 14))
         self.username_entry.pack(pady=12, padx=10)
-
+        
+        self.password_entry = ctk.CTkEntry(self.login_frame, placeholder_text="Contraseña",font=("Arial Rounded MT", 14),show="*")
+        self.password_entry.pack(pady=12, padx=10)        
+        
         self.submit_button = ctk.CTkButton(
-            self.login_frame, text="Ingresar", command=self.handle_login
+            self.login_frame, command=self.handle_login,
+            text="Ingresar", fg_color="#005b96", hover_color="#03396c", font=("false", 16), text_color="#ffffff", width=225).pack(pady=(12), padx=(10)
         )
         self.submit_button.pack(pady=12, padx=10)
 
@@ -41,16 +45,15 @@ class App(ctk.CTk):
         self.main_frame = ctk.CTkScrollableFrame(self)
         self.main_frame.pack(pady=20, padx=20, fill="both", expand=True)
 
-        self.game_label = ctk.CTkLabel(self.main_frame, text="Nombre del juego:")
+        self.game_label = ctk.CTkLabel(self.main_frame, text="Nombre del juego:",font=("false",20))
         self.game_label.pack(pady=5)
 
-        self.game_entry = ctk.CTkEntry(self.main_frame, width=300)
+        self.game_entry = ctk.CTkEntry(self.main_frame, width=300,font=("Arial Rounded MT", 14))
         self.game_entry.pack(pady=5)
 
         self.search_button = ctk.CTkButton(
-            self.main_frame, text="Buscar", command=self.handle_search
-        )
-        self.search_button.pack(pady=10)
+            self.main_frame, text="Buscar"fg_color="#005b96", hover_color="#03396c", font=("false", 16), text_color="#ffffff", width=225,command=self.handle_search
+        ).pack(pady=(12), padx=(10))
 
         self.results_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
         self.results_frame.pack(pady=10, fill="both", expand=True)
@@ -79,7 +82,7 @@ class App(ctk.CTk):
             juego = juegos[0]
             title_label = ctk.CTkLabel(self.results_frame, 
                                      text=f"Juegos similares a {juego['name']}",
-                                     font=("Arial", 14, "bold"))
+                                     font=("false", 16))
             title_label.grid(row=0, column=0, columnspan=5, pady=10)
 
             datos_usuarios[self.current_user].append({
@@ -117,13 +120,14 @@ class App(ctk.CTk):
                                 height=250)
         card_frame.grid(row=row, column=col, padx=10, pady=10)
 
-        label_image = ctk.CTkLabel(card_frame, image=ct_image, text="")
+        label_image = ctk.CTkLabel(card_frame, image=ct_image, text="",font=("false", 16))
         label_image.pack(pady=5)
 
         label_text = ctk.CTkLabel(card_frame, 
                                 text=nombre_juego, 
                                 wraplength=180,
-                                justify="center")
+                                justify="center"
+                                font=("false",16))
         label_text.pack(pady=5)
     
     def buscar_juegos(self, nombre_juego):
