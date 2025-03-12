@@ -44,7 +44,7 @@ class App(ctk.CTk):
     def create_main_frame(self):
         self.login_frame.destroy()
         
-        self.main_frame = ctk.CTkScrollableFrame(self,fg="transparent")
+        self.main_frame = ctk.CTkScrollableFrame(self,fg_color="transparent")
         self.main_frame.pack(pady=20, padx=20, fill="both", expand=True)
 
         self.game_label = ctk.CTkLabel(self.main_frame, text="Nombre del juego:",font=("false",20))
