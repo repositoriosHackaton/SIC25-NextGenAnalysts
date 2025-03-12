@@ -37,7 +37,6 @@ class App(ctk.CTk):
             self.login_frame, command=self.handle_login,
             text="Ingresar", fg_color="#005b96", hover_color="#03396c", font=("false", 16), text_color="#ffffff", width=225).pack(pady=(12), padx=(10)
         )
-        self.submit_button.pack(pady=12, padx=10)
 
     def create_main_frame(self):
         self.login_frame.destroy()
@@ -52,7 +51,7 @@ class App(ctk.CTk):
         self.game_entry.pack(pady=5)
 
         self.search_button = ctk.CTkButton(
-            self.main_frame, text="Buscar"fg_color="#005b96", hover_color="#03396c", font=("false", 16), text_color="#ffffff", width=225,command=self.handle_search
+            self.main_frame, text="Buscar", fg_color="#005b96", hover_color="#03396c", font=("false", 16), text_color="#ffffff", width=225,command=self.handle_search
         ).pack(pady=(12), padx=(10))
 
         self.results_frame = ctk.CTkFrame(self.main_frame, fg_color="transparent")
@@ -126,7 +125,7 @@ class App(ctk.CTk):
         label_text = ctk.CTkLabel(card_frame, 
                                 text=nombre_juego, 
                                 wraplength=180,
-                                justify="center"
+                                justify="center",
                                 font=("false",16))
         label_text.pack(pady=5)
     
